@@ -1,0 +1,4 @@
+   dist/
+   *.skill
+   *.zip
+   .DS_Store
