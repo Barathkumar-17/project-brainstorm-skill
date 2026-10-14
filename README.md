@@ -1,6 +1,6 @@
 # project-brainstorm
 
-A Claude skill that turns a software problem into a complete, standards-based design package. It runs a requirements-gathering session, researches current options online, improves the design until no weak point is left unhandled, and writes eight design documents ready to build from.
+A Claude skill that turns a software problem into a complete, standards-based design package. Started with `/project-brainstorm`, it runs a requirements-gathering session, researches current options online, improves the design until no weak point is left unhandled, and writes eight design documents ready to build from.
 
 Works on claude.ai and Claude Code.
 
@@ -59,16 +59,25 @@ Diagrams are Mermaid, capped by tier to keep token use low.
 
 **Claude Code**
 
+One command, no marketplace needed:
+
 ```sh
-mkdir -p ~/.claude/skills
-cp -r project-brainstorm ~/.claude/skills/
+git clone --depth 1 https://github.com/Barathkumar-17/project-brainstorm-skill.git /tmp/pbs && mkdir -p ~/.claude/skills && cp -r /tmp/pbs/project-brainstorm ~/.claude/skills/ && rm -rf /tmp/pbs
 ```
 
-Restart Claude Code. If your claude.ai skills already sync to Claude Code, skip this to avoid two copies.
+To share it with everyone working in one repository instead, copy the folder to that repository's `.claude/skills/` and commit it.
+
+If your claude.ai skills already sync to Claude Code, skip this to avoid two copies.
 
 ## Use
 
-Describe a software problem, for example in a new chat: "help me design an app for …". The skill starts with an intake summary and a batch of questions.
+The skill runs only when you call it. On claude.ai or in Claude Code, type the command with your problem after it:
+
+```
+/project-brainstorm <describe your software problem>
+```
+
+Typing `/project-brainstorm` alone makes it ask for the problem first. It won't start on its own from ordinary chat.
 
 ## Repository layout
 
