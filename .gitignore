@@ -1,4 +1,4 @@
-   dist/
-   *.skill
-   *.zip
-   .DS_Store
+dist/
+*.skill
+*.zip
+.DS_Store
