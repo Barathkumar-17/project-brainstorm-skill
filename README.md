@@ -7,11 +7,11 @@ Works on claude.ai and Claude Code. Runs only when you type `/project-brainstorm
 ## How a session works
 
 1. **Start:** `/project-brainstorm <your idea or problem>`.
-2. **Grill:** each round, Claude asks every question that can be decided right now, numbered, each with a recommended answer and one line on why. Reply "yes to all", answer some, or override any. Each round unlocks the questions that depended on your answers.
+2. **Grill:** each round, Claude asks every question that can be decided right now, numbered and grouped by branch, each with a recommended answer and one line on why. A frontier longer than 10 questions is split in two so a long round doesn't get a blind "yes to all". Reply "yes to all", answer some, or override any. Each round unlocks the questions that depended on your answers.
 3. **What it covers:** the problem, users, the overall solution concept (several different approaches to pick from), core and supporting features, every part of the solution (how it works and what it contains), and every relevant risk area: security, response time, CPU, memory, reliability, privacy and more.
 4. **Facts vs decisions:** Claude researches the facts itself (options, versions, limits, standards, how others solved it). You make the decisions. If your choice weakens the design, it pushes back once, then records your call.
 5. **Confirm:** when every branch is settled, it shows all decisions and waits for you to confirm.
-6. **Design package:** requirements, a risk and standards pass, an improve step (any proposed change comes back to you as a question), the eight documents, and a final trace check.
+6. **Design package:** requirements, a risk and standards pass, an improve step (any proposed change comes back to you as a question), the eight documents, and a final trace check run by `scripts/trace_check.py` (needs Python 3; the skill checks by hand without it). An unattended run accepts every recommendation, records each as an assumption and lists them in the SRS.
 
 ## Research options
 
@@ -21,7 +21,9 @@ Asked in the first round of questions.
 |---|---|---|---|
 | No research | Built-in knowledge only; unchecked facts marked `verify` | Fastest | Lowest |
 | Standard | Each design part and current standards researched; one improve round | Longer | Moderate |
-| Deep (recommended) | Problem space, every part, standards and law; improve loop repeats until nothing new | Longest | Highest |
+| Deep (recommended) | Problem space, every part, standards and law; improve loop repeats until nothing new (at most three rounds) | Longest | Highest |
+
+For a Prototype, Standard is recommended instead of Deep.
 
 ## Output
 
@@ -43,7 +45,7 @@ Diagrams are Mermaid, capped by tier to keep token use low.
 ## Constraints built in
 
 - Software projects only.
-- Free and open-source tools and free tiers only.
+- Free and open-source tools and free tiers only; a paid tool you name yourself is used and recorded.
 - Design documents only; no code or repo scaffolding.
 - No invented facts: everything is researched and sourced, or marked `verify`.
 
@@ -79,12 +81,17 @@ Typing `/project-brainstorm` alone makes it ask for the idea first. It won't sta
 ```
 project-brainstorm/          the skill (upload or copy this folder)
 ├── SKILL.md                 workflow
-└── references/
-    ├── standards-core.md    built-in standards
-    ├── risk-areas.md        risk checklist
-    └── templates.md         layout of the eight documents
+├── references/
+│   ├── standards-core.md    built-in standards
+│   ├── risk-areas.md        risk checklist
+│   └── templates.md         layout of the eight documents
+└── scripts/
+    └── trace_check.py       cross-file check of the design package
 scripts/package.sh           builds the upload zip
+tests/                       fixtures and mutation tests for trace_check.py
 ```
+
+Run the tests with `python3 tests/test_checker.py`.
 
 ## Credits
 

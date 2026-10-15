@@ -10,6 +10,8 @@ Contents: Rules for every file · Depth by tier · Diagrams · 01-srs · 02-arch
 - Use IDs consistently across files: FR-n, NFR-n, ADR-n, TC-n, TH-n (threats), C-n (components), E-n (entities).
 - One fact, one place. If something is stated in another file, link to it there instead of repeating it.
 - If a section doesn't apply, keep the heading with one line saying why.
+- Define each ID where `scripts/trace_check.py` looks for it: in the first cell of its table row (FR, NFR, C, TH, TC), or in its heading (`### E-n: <name>`, `### ADR-n: <title>`). Any other place may mention an ID but never defines it.
+- Keep the section headings "Risk register" (05), "Test cases" and "Traceability matrix" (06) as written; the checker finds them by name.
 
 ## Depth by tier
 
@@ -68,12 +70,12 @@ Diagrams are kept small to limit token use.
 4. **Core flow sequence** (diagram slot, MVP and Production). Prototype: a numbered list of steps.
 5. **Deployment** (diagram slot, Production). Other tiers: one line naming where each component runs.
 6. **Cross-cutting design:** authentication, authorization, error handling, logging, configuration, caching.
-7. **Correspondences:** which component owns which entity (E-n) and serves which endpoints, in one table: Component | Entities owned | Endpoints served.
+7. **Correspondences:** which component owns which entity (E-n) and serves which endpoints, in one table: Component | Entities owned | Endpoints served. Write each endpoint as `METHOD /path`, exactly as in `04-api-spec.md`.
 
 ## 03-data-model.md: Data Model
 
 1. **Entity relationships** (diagram slot).
-2. **Entities**, one table per entity:
+2. **Entities**, one `### E-n: <name>` heading per entity, each followed by a table:
 
    | Field | Type | Constraints | Personal data (Y/N) | Notes |
    |---|---|---|---|---|
@@ -131,17 +133,17 @@ One block per decision:
 - Status: Accepted
 - Context: <the need, with requirement IDs>
 - Decision: <what was chosen>
-- Decided by: <user / recommended default (unattended run)>
+- Decided by: <user / assumption: user said "you decide" / assumption: unattended run>
 - Alternatives rejected: <option: reason>, …
 - Consequences: <what this makes easier and harder>
-- Sources: [title](URL), …
+- Sources: [title](URL), … (No research run: `none (No research): verify`; a pure user preference: `user preference`)
 ```
 
 ## 08-roadmap.md: Build Roadmap
 
 No dates. Order and dependencies only.
 
-1. **Milestones** (core functionality first)
+1. **Milestones** (core functionality first). Every FR and NFR appears in exactly one milestone. Name each milestone M1, M2, … and list dependencies by those names, or `none`.
 
    | Milestone | Contents (FR / NFR IDs) | Depends on | Exit criteria |
    |---|---|---|---|

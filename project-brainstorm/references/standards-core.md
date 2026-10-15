@@ -2,7 +2,7 @@
 
 Built-in standards the skill applies without web access. Pick only the rows that apply to the project. Editions below were current in October 2026; when web access is available, check for newer ones.
 
-Contents: How to select · Requirements · Quality model · Architecture · Testing · Security · Authentication and data formats · Accessibility · Privacy and data protection · Operations
+Contents: How to select · Requirements · Quality model · Architecture · Testing · Security · Authentication and data formats · Accessibility · Privacy and data protection · AI and ML systems · Domain regulation · Operations
 
 ## How to select
 
@@ -12,7 +12,7 @@ Contents: How to select · Requirements · Quality model · Architecture · Test
 
 ## Requirements: ISO/IEC/IEEE 29148:2018
 
-Each requirement must be:
+The 2018 edition is the published one; a revision is in draft, so check for a newer edition when web access is available. Each requirement must be:
 - **Necessary:** removing it leaves a gap.
 - **Appropriate:** at the right level of detail for the document it sits in.
 - **Unambiguous:** one reading only; no "fast", "easy", "user-friendly" without a number.
@@ -84,7 +84,7 @@ Baseline controls whatever the tier:
 |---|---|
 | OAuth 2.0 (RFC 6749) with PKCE (RFC 7636) and the OAuth Security BCP (RFC 9700); OpenID Connect | Third-party or social login, delegated access. OAuth 2.1 is still a draft; don't cite it as a standard |
 | JWT (RFC 7519) with JWT Best Current Practices (RFC 8725) | Stateless tokens are used |
-| OpenAPI 3.1 or later (3.2 current) | Any HTTP API; the API spec follows its structure |
+| OpenAPI 3.1 or later (3.2.x is current) | Any HTTP API; the API spec follows its structure |
 | HTTP Semantics (RFC 9110) | Any HTTP API: correct methods and status codes |
 | Problem Details (RFC 9457) | API error responses |
 | JSON (RFC 8259), UTF-8 | Data exchange and storage of text |
@@ -95,7 +95,7 @@ Baseline controls whatever the tier:
 
 | Standard | Applies when |
 |---|---|
-| WCAG 2.2, level AA (also ISO/IEC 40500:2025) | Any user interface (web or mobile). WCAG 3.0 is still a draft |
+| WCAG 2.2, level AA (ISO/IEC 40500:2025 mirrors the October 2023 text; W3C updated WCAG 2.2 in December 2024, and a 2026 ISO edition is expected) | Any user interface (web or mobile). WCAG 3.0 is still an early draft |
 
 ## Privacy and data protection
 
@@ -105,15 +105,33 @@ Applies when the project handles any personal data. Apply the law that covers th
 |---|---|
 | GDPR | The organisation is established in the EU, or offers goods or services to, or monitors, people in the EU |
 | UK GDPR | Same tests, for the UK |
-| DPDP Act 2023 and DPDP Rules 2025 | Personal data of people in India. Core duties phase in through 2027 (mark dates `verify`); breaches go to the Data Protection Board within 72 hours |
+| DPDP Act 2023 and DPDP Rules 2025 (notified 14 November 2025) | Personal data of people in India. Duties phase in over 18 months from notification (mark each duty's date `verify`). Notify affected people without delay with plain-language detail, and notify the Data Protection Board (mark the deadline `verify`). A child's data needs verifiable parental consent, with exceptions for essential services such as healthcare and education |
 | CCPA/CPRA, LGPD, other national laws | Users in California, Brazil or elsewhere; look them up |
 
 Principles to design in whatever the law: collect the minimum data needed, state the purpose, get consent where required, let users access, correct and delete their data, set retention limits, and plan breach notification.
+
+## AI and ML systems
+
+Applies when the project calls or trains a model.
+
+| Standard | Use |
+|---|---|
+| OWASP Top 10 for LLM Applications 2025 | Any LLM feature. Check the design against all ten: prompt injection, sensitive information disclosure, supply chain, data and model poisoning, improper output handling, excessive agency, system prompt leakage, vector and embedding weaknesses, misinformation, unbounded consumption |
+| NIST AI RMF, ISO/IEC 42001 | Look up the current text; use as the risk-management frame when the system affects people's decisions |
+| EU AI Act | Users in the EU. Check the risk class. High-risk dates were being postponed by the EU digital omnibus (a provisional agreement proposed 2 December 2027 for stand-alone high-risk systems); mark every date `verify` |
+
+## Domain regulation
+
+Applies when the project touches a regulated domain: card payments, health records, children's data, finance, or a sector with its own rules. This file does not carry those standards. Look up the rule that covers the project's users and domain, design it into the requirements, and mark each unchecked point `verify`. Without web access, name the rule and mark it `verify`; never state its clauses from memory. Names to check:
+
+- Payments: PCI DSS. Health: HIPAA (US). Children: COPPA (US).
+- EU Cyber Resilience Act: applies to products with digital elements sold in the EU. Incident reporting duties apply from 11 September 2026 and most other duties from 11 December 2027 (per law-firm guidance, so mark `verify`).
+- European Accessibility Act: certain consumer products and services sold in the EU.
 
 ## Operations
 
 | Practice | Applies when |
 |---|---|
 | Twelve-Factor App (guideline) | Any deployed backend: config in environment, stateless processes, logs as streams |
-| SBOM in SPDX (ISO/IEC 5962) or CycloneDX (ECMA-424) format | Production tier |
+| SBOM in SPDX (ISO/IEC 5962:2021; the current spec is 3.0.x) or CycloneDX (ECMA-424, 2nd edition, defines CycloneDX 1.7) format | Production tier |
 | Structured logging without personal data or secrets | Any deployed backend |

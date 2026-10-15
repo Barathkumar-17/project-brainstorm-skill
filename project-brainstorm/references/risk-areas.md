@@ -8,7 +8,7 @@ Every way a project can lose value. Go through every row. Give each one a status
 
 If no row in a group applies, mark the whole group Not relevant in one line with the reason, instead of going row by row. If even one row applies, go through that group row by row.
 
-Record the result as the risk register in `05-threat-model.md`. Add project-specific areas at the end if the project has risks this list doesn't cover.
+Record the result as the risk register in `05-threat-model.md`, one row per area, using the area name exactly as written here (a collapsed group gets one row named after the group). `scripts/trace_check.py` reads these names. Add project-specific areas at the end if the project has risks this list doesn't cover.
 
 ## Core
 
@@ -18,6 +18,7 @@ Record the result as the risk register in `05-threat-model.md`. Add project-spec
 | Problem fit | Solution misses the real problem or the main user | Core FRs trace to the stated problem; nothing core is missing |
 | Data integrity | Corrupt, duplicate or inconsistent data | Constraints, transactions, validation at every write |
 | Data loss | Deleted or lost data with no recovery | Backup method, frequency, restore test, recovery point target |
+| Safety and harm | A failure or misuse hurts people (health, money, physical safety) | Hazards named; fail-safe behaviour and warnings defined |
 
 ## Performance and resources
 
@@ -54,6 +55,7 @@ Record the result as the risk register in `05-threat-model.md`. Add project-spec
 | Supply chain | Vulnerable or abandoned packages | Maintained packages only; vulnerability scanning |
 | Privacy | Over-collection, leaks, no deletion path | Standards-core privacy section applied |
 | Auditability | No record of who did what | Audit log for sensitive actions |
+| Legal and regulatory | Domain rules missed (payments, health, minors, finance) | Applicable rules named and designed in; unchecked ones marked `verify` |
 
 ## Usability and reach
 
