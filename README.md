@@ -7,7 +7,7 @@ Works on claude.ai and Claude Code. Runs only when you type `/project-brainstorm
 ## How a session works
 
 1. **Start:** `/project-brainstorm <your idea or problem>`.
-2. **Grill:** Claude asks every question it can answer right now, numbered, each with a recommended answer and one line on why. Reply "yes to all", answer some, or override any. Each round unlocks the questions that depended on your answers.
+2. **Grill:** each round, Claude asks every question that can be decided right now, numbered, each with a recommended answer and one line on why. Reply "yes to all", answer some, or override any. Each round unlocks the questions that depended on your answers.
 3. **What it covers:** the problem, users, the overall solution concept (several different approaches to pick from), core and supporting features, every part of the solution (how it works and what it contains), and every relevant risk area: security, response time, CPU, memory, reliability, privacy and more.
 4. **Facts vs decisions:** Claude researches the facts itself (options, versions, limits, standards, how others solved it). You make the decisions. If your choice weakens the design, it pushes back once, then records your call.
 5. **Confirm:** when every branch is settled, it shows all decisions and waits for you to confirm.
@@ -21,7 +21,7 @@ Asked in the first round of questions.
 |---|---|---|---|
 | No research | Built-in knowledge only; unchecked facts marked `verify` | Fastest | Lowest |
 | Standard | Each design part and current standards researched; one improve round | Longer | Moderate |
-| Deep (default) | Problem space, every part, standards and law; improve loop repeats until nothing new | Longest | Highest |
+| Deep (recommended) | Problem space, every part, standards and law; improve loop repeats until nothing new | Longest | Highest |
 
 ## Output
 
@@ -50,7 +50,7 @@ Diagrams are Mermaid, capped by tier to keep token use low.
 ## Install
 
 **claude.ai**
-1. Run `scripts/package.sh` to build `dist/project-brainstorm.zip`, or download the zip from Releases.
+1. Run `scripts/package.sh` to build `dist/project-brainstorm.zip`, or zip the `project-brainstorm` folder yourself so the folder sits at the top level of the zip.
 2. In claude.ai, turn on code execution and file creation, then upload the zip under Skills in settings.
 3. Make sure the skill is switched on.
 
