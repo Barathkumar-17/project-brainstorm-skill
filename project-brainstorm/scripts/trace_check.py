@@ -124,7 +124,7 @@ def node_names(kind, block):
 def load_risk_areas(path):
     """Return (areas, groups): area names, and {group name: [areas]}; plus optional groups."""
     groups, cur, optional = {}, None, set()
-    for ln in Path(path).read_text(encoding="utf-8").splitlines():
+    for ln in Path(path).read_text(encoding="utf-8-sig").splitlines():
         m = re.match(r"^##\s+(.*)", ln)
         if m:
             title = m.group(1)
@@ -141,6 +141,10 @@ def load_risk_areas(path):
 
 
 def main():
+    # Windows consoles and CI shells often use a legacy code page; never crash on non-ASCII text.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser()
     ap.add_argument("folder")
     ap.add_argument("--risk-areas", default=None)
@@ -154,7 +158,7 @@ def main():
         if not p.is_file():
             err(f, "file missing")
             continue
-        texts[f] = p.read_text(encoding="utf-8")
+        texts[f] = p.read_text(encoding="utf-8-sig")
 
     # 1. Header line and tier/research consistency
     tiers, researches = {}, {}

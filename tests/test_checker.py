@@ -76,5 +76,48 @@ for name, base, edits, delete, want_exit, want in cases:
     print(("PASS" if ok else "FAIL"), name, f"(exit {code}, want {want_exit}; expect '{want}')")
     if not ok:
         print(out)
-print(f"\n{len(cases) - fail}/{len(cases)} passed")
+import os
+
+def run2(chk, d, env=None, cwd=None, isolate=True):
+    args = [sys.executable] + (["-I"] if isolate else []) + [str(chk), str(d)]
+    p = subprocess.run(args, capture_output=True, env=env, cwd=cwd)
+    return p.returncode, p.stdout.decode("utf-8", "replace"), p.stderr.decode("utf-8", "replace")
+
+extra = 0
+def check(name, ok, detail=""):
+    global fail, extra
+    extra += 1
+    fail += not ok
+    print(("PASS" if ok else "FAIL"), name, detail if not ok else "")
+
+# Portability: a clean environment, odd paths, odd encodings, odd line endings.
+clean = {"PATH": os.environ.get("PATH", ""), "LC_ALL": "C"}
+legacy = {"PATH": os.environ.get("PATH", ""), "PYTHONIOENCODING": "ascii", "PYTHONUTF8": "0"}  # -I would ignore these, so the encoding test runs without it
+
+d = W / "my project தமிழ்-design"; shutil.copytree(W / "fx-Prototype", d)
+code, out, err = run2(CHK, d, env=clean, cwd="/")
+check("portable-unicode-and-space-path", code == 0 and "Traceback" not in err, out + err)
+
+d = W / "tamil-text"; shutil.copytree(W / "fx-Prototype", d)
+p = d / "05-threat-model.md"; p.write_text(p.read_text(encoding="utf-8").replace("| Accepted |", "| ஏற்றுக்கொள்ளப்பட்டது |", 1), encoding="utf-8")
+code, out, err = run2(CHK, d, env=legacy, isolate=False)
+check("portable-non-ascii-message-no-crash", code == 1 and "Traceback" not in err and "use Mitigated" in out, out + err)
+
+d = W / "bom"; shutil.copytree(W / "fx-Prototype", d)
+for f in d.glob("*.md"):
+    f.write_bytes(b"\xef\xbb\xbf" + f.read_bytes())
+code, out, err = run2(CHK, d)
+check("portable-utf8-bom", code == 0, out + err)
+
+d = W / "crlf"; shutil.copytree(W / "fx-Prototype", d)
+for f in d.glob("*.md"):
+    f.write_bytes(f.read_bytes().replace(b"\n", b"\r\n"))
+code, out, err = run2(CHK, d)
+check("portable-crlf", code == 0, out + err)
+
+copy = W / "copied skill dir" / "pb"; shutil.copytree(S, copy)
+code, out, err = run2(copy / "scripts" / "trace_check.py", W / "fx-MVP", env=clean, cwd="/")
+check("portable-skill-copied-elsewhere", code == 0 and "risk-areas.md not found" not in out, out + err)
+
+print(f"\n{len(cases) + extra - fail}/{len(cases) + extra} passed")
 sys.exit(1 if fail else 0)

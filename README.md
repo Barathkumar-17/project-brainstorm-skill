@@ -11,7 +11,7 @@ Works on claude.ai and Claude Code. Runs only when you type `/project-brainstorm
 3. **What it covers:** the problem, users, the overall solution concept (several different approaches to pick from), core and supporting features, every part of the solution (how it works and what it contains), and every relevant risk area: security, response time, CPU, memory, reliability, privacy and more.
 4. **Facts vs decisions:** Claude researches the facts itself (options, versions, limits, standards, how others solved it). You make the decisions. If your choice weakens the design, it pushes back once, then records your call.
 5. **Confirm:** when every branch is settled, it shows all decisions and waits for you to confirm.
-6. **Design package:** requirements, a risk and standards pass, an improve step (any proposed change comes back to you as a question), the eight documents, and a final trace check run by `scripts/trace_check.py` (needs Python 3; the skill checks by hand without it). An unattended run accepts every recommendation, records each as an assumption and lists them in the SRS.
+6. **Design package:** requirements, a risk and standards pass, an improve step (any proposed change comes back to you as a question), the eight documents, and a final trace check run by `scripts/trace_check.py` (needs Python 3.8 or newer, any OS; the skill checks by hand without it). An unattended run accepts every recommendation, records each as an assumption and lists them in the SRS.
 
 ## Research options
 
