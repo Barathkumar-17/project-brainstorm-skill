@@ -1,109 +1,80 @@
 ---
 name: project-brainstorm
-description: Runs a structured, standards-based brainstorming and requirements-gathering session for a whole software project, researches current options and best practices online, and produces a complete design package (SRS, architecture, data model, API spec, threat model, test plan, decision records, roadmap). Use only when the user explicitly invokes it by typing /project-brainstorm or asks for the project-brainstorm skill by name. Never start it on your own, even when the user describes a software project or asks how to design one.
+description: Grills the user relentlessly about a software project idea, walking the whole design tree one round of questions at a time with a researched recommendation for each, until every decision is settled, then writes a complete standards-based design package (SRS, architecture, data model, API spec, threat model, test plan, decision records, roadmap). Use only when the user explicitly invokes it by typing /project-brainstorm or asks for the project-brainstorm skill by name. Never start it on your own, even when the user describes a software project or asks how to design one.
 ---
 
 # Project Brainstorm
 
-Turn a problem into a complete, buildable software design in which every relevant way the project could lose value has been dealt with, improved through research until it is the strongest design that can be found. The session ends with design documents only: no code, no repo scaffolding.
+Brainstorm a software project by grilling the user. Map every decision the project needs as a design tree, and work through it with the user until nothing is left assumed. Then turn the settled decisions into a complete design package. The session ends with design documents only: no code, no repo scaffolding.
 
-## Ground rules
-
-- **Software only.** If the project is hardware, IoT or embedded, say this skill doesn't cover it.
-- **Free only.** Every tool, library, framework, service and host must be free/open-source or a free tier. If a requirement can't be met for free, say so and give the closest free option.
-- **Research, don't guess.** Network access is expected. Look up versions, limits, benchmarks, standard clauses and the current state of every tool before relying on it, and record the source. If the user chose No research or web access isn't available, use what you know and mark each unchecked fact `verify`.
-- **Propose, don't interrogate.** Make the design calls yourself. Ask questions only for details that would change the design and weren't given, or when the user asks for an interview.
-- **Self-contained.** Everything comes from this conversation; assume no prior knowledge of the user.
-- **Missing reference file.** If a file under `references/` can't be read, continue from your own knowledge of the standards it names and tell the user the file was missing.
-
-## Phase 1: Intake
+## Start
 
 This skill runs only when the user explicitly invoked it (`/project-brainstorm` or by name). If it was loaded any other way, don't run it; answer the user normally.
 
-Treat any text after `/project-brainstorm` as the user's message. If there is no text, ask the user to describe the problem first.
+Treat any text after `/project-brainstorm` as the project idea or problem. If there is none, ask for it and wait.
 
-From the user's message, pull out: the problem, the target users, the core goal, the platform(s), and any stated constraints or tech preferences.
+## Ground rules
 
-Place the project in a tier:
+- **Decisions are the user's; facts are yours.** Never ask the user anything you can look up. Research facts yourself (how others solved this problem, tool options, versions, limits, known issues, standards, law), using parallel research agents when available, and use them to make each recommendation. Put every decision to the user and wait.
+- **Recommend the strongest option.** Every question carries your recommended answer and one line on why. Recommend only what the research supports.
+- **Push back once.** If an answer weakens the design (security, performance, resource use, reliability, privacy), say how in one or two lines with the better option. If the user keeps their choice, record it and move on.
+- **Software only.** If the project is hardware, IoT or embedded, say this skill doesn't cover it.
+- **Free only.** Recommend only free/open-source tools and free tiers. If a need can't be met for free, say so and give the closest free option.
+- **No invented facts.** Versions, limits, benchmarks and standard clauses must be researched and sourced. If the user chose No research or web access isn't available, mark each unchecked fact `verify`.
+- **Self-contained.** Everything comes from this conversation; assume no prior knowledge of the user.
+- **Missing reference file.** If a file under `references/` can't be read, continue from your own knowledge of the standards it names and tell the user the file was missing.
 
-| Tier | Signals | Depth |
-|---|---|---|
-| Prototype | hackathon, demo, proof of concept | Core flow proven; every area addressed briefly |
-| MVP | course project, first release, small user base | Full core plus key supporting features; every area addressed |
-| Production | public users, real data, growth expected | Full depth everywhere; measurable targets on every quality area |
+## The design tree
 
-Personal or sensitive data, payments, or minors as users raise security and privacy depth to Production level whatever the tier. If the tier is unclear, include it in Phase 2.
+Build the tree from the idea. Each decision branches into the decisions that depend on it. Always include these branches, and add any the project needs:
 
-## Phase 2: Clarify
+- **Problem:** what exactly is wrong, who has it, the root cause, what success looks like, what is out of scope.
+- **Users and roles:** who uses it and what each can do.
+- **Solution concept:** the overall shape of the solution. Present several genuinely different approaches as the choices.
+- **Core features:** what solves the main problem.
+- **Supporting features:** dependability and quality upgrades that raise the overall product.
+- **Each part of the solution:** platform and client, backend, data, authentication, integrations, hosting, background work. For each, how it should work and what it contains.
+- **Quality and risk:** one branch per relevant area in `references/risk-areas.md` (security, response time, CPU, memory, reliability, privacy and the rest), deciding how the design protects against it. A group with nothing relevant is closed with one line.
+- **Tier:** Prototype, MVP or Production. The tier sets document depth only; it never removes a branch. Personal or sensitive data, payments, or minors as users raise security and privacy depth to Production level whatever the tier.
 
-List the gaps that would change the design. Areas to check: users and roles, expected scale, platform and device limits, kind of data handled, offline needs, integrations, authentication, existing systems, success criteria, the team's known stack.
+## Rounds
 
-Ask only the questions this project needs, in one batch, ordered by impact. Give each a suggested default so the user can reply "defaults".
+The **frontier** is every open decision whose prerequisites are settled. Each round, ask the whole frontier at once, numbered, each with your recommendation. A question that depends on another question still open in the same round waits for a later round.
 
-End the batch by asking how much research to do, showing these options as given:
+Format each question like this:
+
+```
+**Q1 · <short title>**
+<the question; for a choice, list the options with a one-line trade-off each>
+➡️ Recommended: <answer>, because <one line>
+```
+
+Word each question so "yes" accepts the recommendation. The user can answer "yes to all", answer some, or override any.
+
+The first round always includes: the problem framing as you understand it, the tier, and how much research should back your recommendations:
 
 | Option | What happens | Outcome | Time | Token use |
 |---|---|---|---|---|
-| No research | Design from built-in knowledge only | Complete design; unchecked facts marked `verify` | Fastest | Lowest |
-| Standard | Research each design part and current standards; one improve round | Choices checked against current sources | Longer | Moderate |
-| Deep (default) | Research the problem space, every design part, standards and law; the improve loop repeats until a round finds nothing new | Strongest design that can be found, every choice sourced | Longest | Highest, often several times Standard |
+| No research | Recommendations from built-in knowledge only | Unchecked facts marked `verify` | Fastest | Lowest |
+| Standard | Each part of the solution and the current standards researched | Recommendations checked against current sources | Longer | Moderate |
+| Deep (recommended) | Problem space, every part, standards and law researched; the improve loop repeats until nothing new | Strongest recommendations, every one sourced | Longest | Highest, often several times Standard |
 
-Then stop and wait for the answers; don't start Phase 3 until they arrive. If the session is running unattended with no one to answer, use the defaults (Deep research) and list them as assumptions. Ask a second round only if the answers open a new gap that matters. Anything left unanswered becomes a written assumption.
+After each round, record the decisions, recompute the frontier and ask the next round. While research for a question is still running, ask the rest of the frontier and hold only the questions that depend on it.
 
-## Phase 3: Requirements
+If the session is running unattended with no one to answer, accept every recommendation and record each as an assumption.
 
-Read `references/standards-core.md` (Requirements section).
+## End of the grill
 
-- **Functional (FR-n):** mark each as **core** (solves the main problem) or **supporting** (dependability and quality upgrades).
-- **Non-functional (NFR-n):** grouped by the characteristics of the current ISO/IEC 25010 edition, each with a measurable target.
-- Every requirement must meet the ISO/IEC/IEEE 29148 characteristics and carry the attributes listed in `references/standards-core.md`.
+The grill is done when the frontier is empty: every branch visited, every relevant risk area decided, nothing silently assumed. Then show every decision grouped by branch, and ask the user to confirm you share the same understanding. Don't write any document until they confirm.
 
-## Phase 4: Research
+## Build the design package
 
-Skip this phase if the user chose No research. Otherwise, research what the design depends on:
+After confirmation:
 
-- **The problem space:** how this kind of problem is usually solved, proven patterns, and common reasons such projects fail.
-- **Each design part:** the strongest free options today, whether they are actively maintained, their current versions and limits, and known security or performance problems.
-- **Standards and law:** current editions of the standards in `references/standards-core.md`, plus any domain-specific standards or data-protection law that applies.
+1. **Requirements.** Read `references/standards-core.md`. Turn the decisions into functional requirements (FR-n, marked core or supporting) and non-functional requirements (NFR-n, grouped by ISO/IEC 25010 characteristic, each with a measurable target), meeting the ISO/IEC/IEEE 29148 characteristics and attributes.
+2. **Risk and standards pass.** Read `references/risk-areas.md`. Give every area a status (Mitigated, linked to an FR, NFR or ADR; Accepted, with reason; or Not relevant, with reason). List the applicable standards in the SRS, researching domain-specific ones.
+3. **Improve.** Review the whole design as a critic looking for weak points: the core flow, the top risks, any requirement met only partly. Research better approaches. Put each proposed change to the user as one more round; never change a decision on their behalf. No research and Standard run one improve round; Deep repeats until a round finds nothing new.
+4. **Deliverables.** Read `references/templates.md`. Write eight Markdown files into a new `<project-name>-design/` folder in the current working directory: `01-srs.md`, `02-architecture.md`, `03-data-model.md`, `04-api-spec.md`, `05-threat-model.md`, `06-test-plan.md`, `07-decisions.md`, `08-roadmap.md`. Each decision from the grill becomes an ADR recording the options considered, the user's choice and the sources. The tier sets depth; a file that doesn't apply keeps one line saying why. Diagrams are Mermaid, within the limits in `templates.md`. Hand the files to the user if the surface can send files; without file tools, output each document in the chat under its file name.
+5. **Trace check.** Confirm every FR and NFR maps to a design element and at least one test case; every risk area has a status; every ADR names its sources; nothing is TBD except listed assumptions; names and numbers match across all files, diagrams included. Fix any gaps.
 
-Standard covers each design part, the standards and the law; Deep covers all three areas in full, whatever the tier. If a tool for running parallel research agents is available, give each part its own agent; otherwise research inline. Keep a source list; each finding that shapes the design must be traceable to a source.
-
-## Phase 5: Design
-
-Break the solution into its parts (for example client, backend, data store, auth, hosting, integrations, background jobs). For each part, record the choice, the alternatives rejected, the reason, and the sources behind it as a decision record (ADR-n). Prefer the simplest design that meets the requirements; every added component must be justified by a requirement.
-
-## Phase 6: Risk and standards pass
-
-Read `references/risk-areas.md`. For each area, decide whether it is relevant. If it is, either map it to a mitigation (linked to an FR, NFR or ADR) or accept it with a stated reason. Never leave an area unmarked.
-
-List the applicable standards from `references/standards-core.md` and Phase 4 in the SRS.
-
-## Phase 7: Improve
-
-Review the draft design as a critic looking for its weakest points: the core flow, the top risks, and any requirement met only partly. For each weak point, find better approaches (by research unless the user chose No research) and adopt one if it is clearly stronger and still free; update the affected ADRs, requirements and risk statuses.
-
-- **No research:** one round from built-in knowledge.
-- **Standard:** one researched round.
-- **Deep:** repeat rounds until a round finds no meaningful improvement.
-
-## Phase 8: Deliverables
-
-Read `references/templates.md`. Produce eight Markdown files:
-
-`01-srs.md`, `02-architecture.md`, `03-data-model.md`, `04-api-spec.md`, `05-threat-model.md`, `06-test-plan.md`, `07-decisions.md`, `08-roadmap.md`
-
-- The tier changes how deep each file goes. It never removes a file or a risk area. If a file doesn't apply (for example, no API), keep it with one line saying why.
-- Diagrams are Mermaid, limited to the slots, sizes and counts set in `references/templates.md`, to keep token use low. A diagram replaces the matching table or text rather than repeating it.
-- Write the files into a new folder named `<project-name>-design/` in the current working directory, and hand them to the user if the surface has a way to send files. If file tools aren't available, output each document in the chat under its file name.
-
-## Phase 9: Trace check
-
-Before handing over, confirm that:
-
-- every FR and NFR maps to a design element and at least one test case;
-- every risk area has a status;
-- every ADR names its sources;
-- nothing is left as TBD except listed assumptions;
-- names and numbers match across all files, diagrams included.
-
-Fix any gaps, then deliver with a short summary: the tier, the research option used, the core idea, what the improve phase changed, the top 3 risks, the assumptions the user should confirm, and every item marked `verify`.
+Finish with a short summary: the tier, the research option used, the core idea, what the improve step changed, the top 3 risks, the assumptions to confirm, and every item marked `verify`.

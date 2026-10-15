@@ -131,6 +131,7 @@ One block per decision:
 - Status: Accepted
 - Context: <the need, with requirement IDs>
 - Decision: <what was chosen>
+- Decided by: <user / recommended default (unattended run)>
 - Alternatives rejected: <option: reason>, …
 - Consequences: <what this makes easier and harder>
 - Sources: [title](URL), …

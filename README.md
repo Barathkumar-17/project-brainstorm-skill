@@ -1,24 +1,21 @@
 # project-brainstorm
 
-A Claude skill that turns a software problem into a complete, standards-based design package. Started with `/project-brainstorm`, it runs a requirements-gathering session, researches current options online, improves the design until no weak point is left unhandled, and writes eight design documents ready to build from.
+A Claude skill that brainstorms a software project by grilling you. It maps every decision the project needs as a design tree and works through it with you, one round of questions at a time, each with a researched recommendation. When nothing is left assumed, it writes a complete, standards-based design package ready to build from.
 
-Works on claude.ai and Claude Code.
+Works on claude.ai and Claude Code. Runs only when you type `/project-brainstorm`.
 
-## What a session does
+## How a session works
 
-1. **Intake:** captures the problem, users and platform; sizes the project as Prototype, MVP or Production.
-2. **Clarify:** asks every question the design needs in one batch, each with a default, and asks how much research to do.
-3. **Requirements:** functional (core and supporting) and non-functional, to ISO/IEC/IEEE 29148 and ISO/IEC 25010.
-4. **Research:** the problem space, the best free option for each part, current standards and law.
-5. **Design:** each part chosen with rejected alternatives and sources, recorded as decision records.
-6. **Risk and standards pass:** every risk area is mitigated, accepted with a reason, or marked not relevant.
-7. **Improve:** reviews the design as a critic and researches better approaches for its weak points.
-8. **Deliverables:** writes the eight documents.
-9. **Trace check:** every requirement maps to a design element and a test before handover.
+1. **Start:** `/project-brainstorm <your idea or problem>`.
+2. **Grill:** Claude asks every question it can answer right now, numbered, each with a recommended answer and one line on why. Reply "yes to all", answer some, or override any. Each round unlocks the questions that depended on your answers.
+3. **What it covers:** the problem, users, the overall solution concept (several different approaches to pick from), core and supporting features, every part of the solution (how it works and what it contains), and every relevant risk area: security, response time, CPU, memory, reliability, privacy and more.
+4. **Facts vs decisions:** Claude researches the facts itself (options, versions, limits, standards, how others solved it). You make the decisions. If your choice weakens the design, it pushes back once, then records your call.
+5. **Confirm:** when every branch is settled, it shows all decisions and waits for you to confirm.
+6. **Design package:** requirements, a risk and standards pass, an improve step (any proposed change comes back to you as a question), the eight documents, and a final trace check.
 
 ## Research options
 
-Chosen by the user at the end of the clarify step.
+Asked in the first round of questions.
 
 | Option | What happens | Time | Token use |
 |---|---|---|---|
@@ -71,13 +68,11 @@ If your claude.ai skills already sync to Claude Code, skip this to avoid two cop
 
 ## Use
 
-The skill runs only when you call it. On claude.ai or in Claude Code, type the command with your problem after it:
-
 ```
-/project-brainstorm <describe your software problem>
+/project-brainstorm <describe your software idea or problem>
 ```
 
-Typing `/project-brainstorm` alone makes it ask for the problem first. It won't start on its own from ordinary chat.
+Typing `/project-brainstorm` alone makes it ask for the idea first. It won't start on its own from ordinary chat.
 
 ## Repository layout
 
@@ -90,6 +85,10 @@ project-brainstorm/          the skill (upload or copy this folder)
     └── templates.md         layout of the eight documents
 scripts/package.sh           builds the upload zip
 ```
+
+## Credits
+
+The grilling interview style is adapted from Matt Pocock's `grilling` skill ([mattpocock/skills](https://github.com/mattpocock/skills), MIT).
 
 ## License
 
